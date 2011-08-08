@@ -1,20 +1,42 @@
 package com.partkyle.prefix.nodes;
 
-import java.util.Set;
-import java.util.TreeSet;
+import javax.management.RuntimeErrorException;
 
-public abstract class BasicNodeImpl implements Node, Comparable<BasicNodeImpl> {
+public abstract class BasicNodeImpl implements Node {
 
-	private Set<Node> children = new TreeSet<Node>();
+	private Node leftChild;
+	private Node rightChild;
 
 	@Override
-	public Set<Node> getChildren() {
-		return children;
+	public Node getLeftChild() {
+		return leftChild;
+	}
+
+	public void setLeftChild(Node leftChild) {
+		this.leftChild = leftChild;
 	}
 
 	@Override
-	public void addChild(Node child) {
-		children.add(child);
+	public Node getRightChild() {
+		return rightChild;
+	}
+
+	public void setRightChild(Node rightChild) {
+		this.rightChild = rightChild;
+	}
+
+	@Override
+	public void addChild(Node node) {
+		if (leftChild == null) {
+			leftChild = node;
+		} else if (rightChild == null) {
+			rightChild = node;
+		} else if (rightChild.getPrecedence() < node.getPrecedence()) {
+			node.addChild(rightChild);
+			rightChild = node;
+		} else {
+			throw new RuntimeException("Too many children");
+		}
 	}
 
 	public void prefix(Visitor visitor) {
@@ -23,21 +45,10 @@ public abstract class BasicNodeImpl implements Node, Comparable<BasicNodeImpl> {
 
 	private void prefix(Node n, Visitor visitor) {
 		visitor.visit(n);
-
-		for (Node child : n.getChildren()) {
-			prefix(child, visitor);
-		}
+		if (leftChild != null)
+			prefix(leftChild, visitor);
+		if (rightChild != null)
+			prefix(rightChild, visitor);
 	}
 
-	@Override
-	public int compareTo(BasicNodeImpl o) {
-		if (o == null)
-			return 1;
-
-		if (o.getPrecedence() <= getPrecedence())
-			return -1;
-		else
-			return 1;
-
-	}
 }

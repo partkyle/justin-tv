@@ -1,13 +1,14 @@
 package com.partkyle.prefix.nodes;
 
-import java.util.Collection;
-
 public interface Node {
-	Collection<Node> getChildren();
+
+	Node getLeftChild();
+
+	Node getRightChild();
 
 	int getPrecedence();
-
-	public void addChild(Node child);
+	
+	void addChild(Node node);
 
 	public void prefix(Visitor visitor);
 }

@@ -10,7 +10,6 @@ import com.partkyle.prefix.nodes.OperatorNode;
 public class InfixParser {
 
 	public Node parse(Scanner scanner) {
-		Node currentNode = null;
 		Stack<Node> stack = new Stack<Node>();
 
 		for (String token : scanner.getTokens()) {
@@ -37,18 +36,19 @@ public class InfixParser {
 			if (stack.size() == 0) {
 				stack.add(node);
 			} else {
-				Node current = stack.peek();
+				Node current = stack.pop();
 
 				if (current.getPrecedence() < node.getPrecedence()) {
-					node.addChild(stack.pop());
-					currentNode = node;
-					stack.add(node);
+					node.addChild(current);
+					current = node;
 				} else {
 					current.addChild(node);
 				}
+
+				stack.add(current);
 			}
 		}
 
-		return stack.pop();
+		return stack.get(0);
 	}
 }
