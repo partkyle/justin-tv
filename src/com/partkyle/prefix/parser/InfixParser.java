@@ -1,5 +1,7 @@
 package com.partkyle.prefix.parser;
 
+import java.util.Stack;
+
 import com.partkyle.prefix.Operator;
 import com.partkyle.prefix.nodes.FactorNode;
 import com.partkyle.prefix.nodes.Node;
@@ -9,6 +11,7 @@ public class InfixParser {
 
 	public Node parse(Scanner scanner) {
 		Node currentNode = null;
+		Stack<Node> stack = new Stack<Node>();
 
 		for (String token : scanner.getTokens()) {
 			Operator tokenType = Operator.fromToken(token);
@@ -18,6 +21,8 @@ public class InfixParser {
 			case Subtract:
 			case Multiply:
 			case Divide:
+			case OpenParen:
+			case CloseParen:
 				node = new OperatorNode(tokenType);
 				break;
 
@@ -29,20 +34,21 @@ public class InfixParser {
 				break;
 			}
 
-			if (currentNode == null) {
-				currentNode = node;
+			if (stack.size() == 0) {
+				stack.add(node);
 			} else {
-				// Compare the nodes for precedence to see where to put this new
-				// node
-				if (currentNode.getPrecedence() < node.getPrecedence()) {
-					node.addChild(currentNode);
+				Node current = stack.peek();
+
+				if (current.getPrecedence() < node.getPrecedence()) {
+					node.addChild(stack.pop());
 					currentNode = node;
+					stack.add(node);
 				} else {
-					currentNode.addChild(node);
+					current.addChild(node);
 				}
 			}
 		}
 
-		return currentNode;
+		return stack.pop();
 	}
 }

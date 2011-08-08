@@ -4,8 +4,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-import org.omg.CORBA.INITIALIZE;
-
+import com.partkyle.prefix.nodes.LoggingVisitor;
+import com.partkyle.prefix.nodes.Node;
+import com.partkyle.prefix.nodes.Visitor;
 import com.partkyle.prefix.parser.BasicScanner;
 import com.partkyle.prefix.parser.InfixParser;
 import com.partkyle.prefix.parser.Scanner;
@@ -18,7 +19,10 @@ public class InfixToPrefixConverter {
 			Scanner scanner = new BasicScanner(expression);
 			InfixParser parser = new InfixParser();
 
-			System.out.println(parser.parse(scanner));
+			Node node = parser.parse(scanner);
+
+			Visitor visitor = new LoggingVisitor();
+			node.prefix(visitor);
 		}
 	}
 

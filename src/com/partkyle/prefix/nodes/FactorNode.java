@@ -1,11 +1,7 @@
 package com.partkyle.prefix.nodes;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class FactorNode implements Node {
+public class FactorNode extends BasicNodeImpl {
 	private String factor;
-	private List<Node> children = new ArrayList<Node>();
 
 	public FactorNode(String factor) {
 		this.factor = factor;
@@ -20,21 +16,13 @@ public class FactorNode implements Node {
 	}
 
 	@Override
-	public List<Node> getChildren() {
-		return children;
-	}
-
-	public void setChildren(List<Node> children) {
-		this.children = children;
-	}
-
-	@Override
 	public int getPrecedence() {
 		return 0;
 	}
 
 	@Override
-	public void addChild(Node child) {
-		children.add(child);
+	public String toString() {
+		return factor;
 	}
+
 }
