@@ -6,18 +6,19 @@ public enum Operator {
 	Multiply("*", 3),
 	Divide("/", 3),
 	OpenParen("(", 6),
-	CloseParen(")", 6);
+	CloseParen(")", 6),
+	Factor();
 
-	String character;
-	int precedence;
+	String character = "";
+	int precedence = 0;
+
+	Operator() {
+
+	}
 
 	Operator(String character, int precedence) {
 		this.character = character;
 		this.precedence = precedence;
-	}
-
-	public boolean isFaster(Operator op) {
-		return precedence > op.precedence;
 	}
 
 	public static Operator fromToken(String token) {
@@ -26,7 +27,15 @@ public enum Operator {
 				return op;
 			}
 		}
-		return null;
+		return Factor;
+	}
+
+	public String getCharacter() {
+		return character;
+	}
+
+	public int getPrecedence() {
+		return precedence;
 	}
 
 }
