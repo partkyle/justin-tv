@@ -14,36 +14,41 @@ public class InfixToPrefixConverter {
 		InfixToPrefixConverter converter = new InfixToPrefixConverter();
 		String result = null;
 		while (!"exit".equals(result)) {
-			result = getRawInput("\n> ");
+			result = getRawInput("> ");
 			converter.convert(result);
+			System.out.println();
 		}
 	}
 
 	public String convert(String result) {
 		List<String> output = new ArrayList<String>();
-		Stack<Operator> operators = new Stack<Operator>();
-		List<String> tokens = getTokens(result);
-		for (String token : tokens) {
-			Operator op = Operator.fromToken(token);
-			if (op != null) {
-				if (operators.size() > 0 && operators.peek() != null) {
-					if (op.precedence > operators.peek().precedence) {
-						operators.add(operators.size() - 1, op);
-					} else if (op.precedence <= operators.peek().precedence) {
-						output.add(operators.pop().character);
-						operators.add(op);
+		Stack<String> operators = new Stack<String>();
+		for (String token : getTokens(result)) {
+			if (isOperator(token)) {
+				while (!operators.isEmpty()) {
+					String operator = operators.peek();
+					if (isOperator(operator) && getPrecedence(token) <= getPrecedence(operator)) {
+						output.add(operators.pop());
+					} else {
+						break;
 					}
-				} else {
-					operators.add(op);
+				}
+				operators.add(token);
+			} else if ("(".equals(token)) {
+				operators.add(token);
+			} else if (")".equals(token)) {
+				String s;
+				while (!(s = operators.pop()).equals("(")) {
+					output.add(s);
 				}
 			} else {
 				output.add(token);
 			}
 		}
 
-		output.add(operators.pop().character);
-
-		System.out.println(operators);
+		while (!operators.isEmpty()) {
+			output.add(operators.pop());
+		}
 
 		Collections.reverse(output);
 
@@ -53,6 +58,19 @@ public class InfixToPrefixConverter {
 		}
 		System.out.println();
 		return "";
+	}
+
+	public boolean isOperator(String token) {
+		return "+-*/".indexOf(token) != -1;
+	}
+
+	public int getPrecedence(String token) {
+		if ("*".equals(token) || "/".equals(token)) {
+			return 2;
+		} else if ("+".equals(token) || "-".equals(token)) {
+			return 1;
+		}
+		return 0;
 	}
 
 	public List<String> getTokens(String expression) {
