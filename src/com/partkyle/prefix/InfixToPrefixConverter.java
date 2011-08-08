@@ -50,8 +50,6 @@ public class InfixToPrefixConverter {
 			output.add(operators.pop());
 		}
 
-		Collections.reverse(output);
-
 		for (String string : output) {
 			System.out.print(string);
 			System.out.print(" ");
