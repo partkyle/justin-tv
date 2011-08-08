@@ -6,4 +6,6 @@ public interface Node {
 	List<Node> getChildren();
 
 	int getPrecedence();
+	
+	public void addChild(Node child);
 }

@@ -1,10 +1,11 @@
 package com.partkyle.prefix.nodes;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class FactorNode implements Node {
 	private String factor;
-	private List<Node> children;
+	private List<Node> children = new ArrayList<Node>();
 
 	public FactorNode(String factor) {
 		this.factor = factor;
@@ -30,5 +31,10 @@ public class FactorNode implements Node {
 	@Override
 	public int getPrecedence() {
 		return 0;
+	}
+
+	@Override
+	public void addChild(Node child) {
+		children.add(child);
 	}
 }
