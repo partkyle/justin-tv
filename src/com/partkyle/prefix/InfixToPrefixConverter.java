@@ -13,7 +13,7 @@ public class InfixToPrefixConverter {
 		String result = null;
 		while (!"exit".equals(result)) {
 			result = getRawInput("> ");
-			converter.convert(result);
+			System.out.println(converter.convert(result));
 			System.out.println();
 		}
 	}
@@ -54,9 +54,7 @@ public class InfixToPrefixConverter {
 			factors.push(eval(left, operators.pop(), right));
 		}
 
-		System.out.println(factors.pop());
-
-		return "";
+		return factors.pop();
 	}
 
 	public String eval(String left, String operator, String right) {
