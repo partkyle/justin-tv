@@ -21,41 +21,48 @@ public class InfixToPrefixConverter {
 	}
 
 	public String convert(String result) {
-		List<String> output = new ArrayList<String>();
+		Stack<String> factors = new Stack<String>();
 		Stack<String> operators = new Stack<String>();
 		for (String token : getTokens(result)) {
 			if (isOperator(token)) {
 				while (!operators.isEmpty()) {
-					String operator = operators.peek();
-					if (isOperator(operator) && getPrecedence(token) <= getPrecedence(operator)) {
-						output.add(operators.pop());
+					if (getPrecedence(token) <= getPrecedence(operators.peek())) {
+						String right = factors.pop(), left = factors.pop();
+						factors.push(eval(left, operators.pop(), right));
 					} else {
 						break;
 					}
 				}
-				operators.add(token);
+				operators.push(token);
 			} else if ("(".equals(token)) {
-				operators.add(token);
+				operators.push(token);
 			} else if (")".equals(token)) {
-				String s;
-				while (!(s = operators.pop()).equals("(")) {
-					output.add(s);
+				while (!operators.isEmpty()) {
+					String operator = operators.pop();
+					if ("(".equals(operator)) {
+						break;
+					} else {
+						String right = factors.pop(), left = factors.pop();
+						factors.push(eval(left, operator, right));
+					}
 				}
 			} else {
-				output.add(token);
+				factors.push(token);
 			}
 		}
 
 		while (!operators.isEmpty()) {
-			output.add(operators.pop());
+			String right = factors.pop(), left = factors.pop();
+			factors.push(eval(left, operators.pop(), right));
 		}
 
-		for (String string : output) {
-			System.out.print(string);
-			System.out.print(" ");
-		}
-		System.out.println();
+		System.out.println(factors.pop());
+
 		return "";
+	}
+
+	public String eval(String left, String operator, String right) {
+		return String.format("(%s %s %s)", operator, left, right);
 	}
 
 	public boolean isOperator(String token) {
