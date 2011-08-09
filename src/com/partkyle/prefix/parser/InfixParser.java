@@ -2,14 +2,14 @@ package com.partkyle.prefix.parser;
 
 import java.util.Stack;
 
-public class Parser {
-	
+public class InfixParser {
+
 	private Scanner scanner;
-	
-	public Parser(Scanner scanner) {
+
+	public InfixParser(Scanner scanner) {
 		this.scanner = scanner;
 	}
-	
+
 	public String parse() {
 		Stack<String> factors = new Stack<String>();
 		Stack<String> operators = new Stack<String>();
@@ -46,7 +46,6 @@ public class Parser {
 			factors.push(eval(left, operators.pop(), right));
 		}
 
-		System.out.println(factors.pop());
 		return factors.pop();
 	}
 
