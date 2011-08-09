@@ -1,6 +1,5 @@
 package com.partkyle.prefix.nodes;
 
-import javax.management.RuntimeErrorException;
 
 public abstract class BasicNodeImpl implements Node {
 
