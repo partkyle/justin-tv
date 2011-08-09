@@ -12,7 +12,7 @@ public class InfixToPrefixConverter {
 		String result = getRawInput("> ");
 		while (!"exit".equals(result)) {
 			InfixParser parser = new InfixParser(new BasicScanner(result));
-			System.out.println(parser.parse());
+			System.out.println(parser.parse().toPrefix());
 			result = getRawInput("> ");
 		}
 	}

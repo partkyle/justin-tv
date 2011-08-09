@@ -2,6 +2,11 @@ package com.partkyle.prefix.parser;
 
 import java.util.Stack;
 
+import com.partkyle.prefix.expression.Expression;
+import com.partkyle.prefix.expression.Factor;
+import com.partkyle.prefix.expression.LeftRightExpression;
+import com.partkyle.prefix.expression.Operator;
+
 public class InfixParser {
 
 	private Scanner scanner;
@@ -10,14 +15,14 @@ public class InfixParser {
 		this.scanner = scanner;
 	}
 
-	public String parse() {
-		Stack<String> factors = new Stack<String>();
+	public Expression parse() {
+		Stack<Expression> factors = new Stack<Expression>();
 		Stack<String> operators = new Stack<String>();
 		for (String token : scanner.getTokens()) {
 			if (isOperator(token)) {
 				while (!operators.isEmpty()) {
 					if (getPrecedence(token) <= getPrecedence(operators.peek())) {
-						String right = factors.pop(), left = factors.pop();
+						Expression right = factors.pop(), left = factors.pop();
 						factors.push(eval(left, operators.pop(), right));
 					} else {
 						break;
@@ -32,25 +37,25 @@ public class InfixParser {
 					if ("(".equals(operator)) {
 						break;
 					} else {
-						String right = factors.pop(), left = factors.pop();
+						Expression right = factors.pop(), left = factors.pop();
 						factors.push(eval(left, operator, right));
 					}
 				}
 			} else {
-				factors.push(token);
+				factors.push(new Factor(token));
 			}
 		}
 
 		while (!operators.isEmpty()) {
-			String right = factors.pop(), left = factors.pop();
+			Expression right = factors.pop(), left = factors.pop();
 			factors.push(eval(left, operators.pop(), right));
 		}
 
 		return factors.pop();
 	}
 
-	private String eval(String left, String operator, String right) {
-		return String.format("(%s %s %s)", operator, left, right);
+	private Expression eval(Expression left, String operator, Expression right) {
+		return new LeftRightExpression(left, Operator.fromToken(operator), right);
 	}
 
 	private boolean isOperator(String token) {
