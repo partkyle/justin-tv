@@ -3,79 +3,18 @@ package com.partkyle.prefix;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Stack;
+
+import com.partkyle.prefix.parser.BasicScanner;
+import com.partkyle.prefix.parser.InfixParser;
 
 public class InfixToPrefixConverter {
 	public static void main(String[] args) {
-		InfixToPrefixConverter converter = new InfixToPrefixConverter();
-		String result = null;
+		String result = getRawInput("> ");
 		while (!"exit".equals(result)) {
+			InfixParser parser = new InfixParser(new BasicScanner(result));
+			System.out.println(parser.parse().toPrefix());
 			result = getRawInput("> ");
-			System.out.println(converter.convert(result));
-			System.out.println();
 		}
-	}
-
-	public String convert(String result) {
-		Stack<String> factors = new Stack<String>();
-		Stack<String> operators = new Stack<String>();
-		for (String token : getTokens(result)) {
-			if (isOperator(token)) {
-				while (!operators.isEmpty()) {
-					if (getPrecedence(token) <= getPrecedence(operators.peek())) {
-						String right = factors.pop(), left = factors.pop();
-						factors.push(eval(left, operators.pop(), right));
-					} else {
-						break;
-					}
-				}
-				operators.push(token);
-			} else if ("(".equals(token)) {
-				operators.push(token);
-			} else if (")".equals(token)) {
-				while (!operators.isEmpty()) {
-					String operator = operators.pop();
-					if ("(".equals(operator)) {
-						break;
-					} else {
-						String right = factors.pop(), left = factors.pop();
-						factors.push(eval(left, operator, right));
-					}
-				}
-			} else {
-				factors.push(token);
-			}
-		}
-
-		while (!operators.isEmpty()) {
-			String right = factors.pop(), left = factors.pop();
-			factors.push(eval(left, operators.pop(), right));
-		}
-
-		return factors.pop();
-	}
-
-	public String eval(String left, String operator, String right) {
-		return String.format("(%s %s %s)", operator, left, right);
-	}
-
-	public boolean isOperator(String token) {
-		return "+-*/".indexOf(token) != -1;
-	}
-
-	public int getPrecedence(String token) {
-		if ("*".equals(token) || "/".equals(token)) {
-			return 2;
-		} else if ("+".equals(token) || "-".equals(token)) {
-			return 1;
-		}
-		return 0;
-	}
-
-	public List<String> getTokens(String expression) {
-		return Arrays.asList(expression.split("\\s+"));
 	}
 
 	public static String getRawInput(String prompt) {
@@ -89,6 +28,7 @@ public class InfixToPrefixConverter {
 			System.out.println(e.getMessage());
 		}
 
-		return "exit";
+		return "";
 	}
+
 }
