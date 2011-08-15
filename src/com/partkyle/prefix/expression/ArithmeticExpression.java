@@ -1,11 +1,11 @@
 package com.partkyle.prefix.expression;
 
-public class LeftRightExpression implements Expression {
+public class ArithmeticExpression implements Expression {
 	private Expression left;
 	private Operator operator;
 	private Expression right;
 
-	public LeftRightExpression(Expression left, Operator operator, Expression right) {
+	public ArithmeticExpression(Expression left, Operator operator, Expression right) {
 		this.left = left;
 		this.operator = operator;
 		this.right = right;

@@ -4,7 +4,7 @@ import java.util.Stack;
 
 import com.partkyle.prefix.expression.Expression;
 import com.partkyle.prefix.expression.Factor;
-import com.partkyle.prefix.expression.LeftRightExpression;
+import com.partkyle.prefix.expression.ArithmeticExpression;
 import com.partkyle.prefix.expression.Operator;
 
 public class InfixParser {
@@ -79,7 +79,7 @@ public class InfixParser {
 	}
 
 	private Expression eval(Expression left, String operator, Expression right) {
-		return new LeftRightExpression(left, Operator.fromToken(operator), right);
+		return new ArithmeticExpression(left, Operator.fromToken(operator), right);
 	}
 
 	private boolean isOperator(String token) {
