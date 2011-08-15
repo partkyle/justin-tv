@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+import com.partkyle.prefix.expression.Expression;
 import com.partkyle.prefix.parser.BasicScanner;
 import com.partkyle.prefix.parser.InfixParser;
 
@@ -12,7 +13,9 @@ public class InfixToPrefixConverter {
 		String result = getRawInput("> ");
 		while (!"exit".equals(result)) {
 			InfixParser parser = new InfixParser(new BasicScanner(result));
-			System.out.println(parser.parse().toPrefix());
+			Expression expression = parser.parse();
+			if (expression != null)
+				System.out.println(expression.toPrefix());
 			result = getRawInput("> ");
 		}
 	}
